@@ -1,0 +1,42 @@
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
+<script>
+randomString = function(len) {
+	if(!len)
+		len = 15;
+	if(len < 0)
+		len = 15
+	var abc = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_$'
+	var re = abc[Math.floor(Math.random() * abc.length)]
+	abc += '0123456789'
+	while(len--) {
+		re += abc[Math.floor(Math.random() * abc.length)]
+	}
+	return re;
+}
+url = 'https://api.themoviedb.org/3/movie/changes?api_key=7b5e30851a9285340e78c201c4e4ab99&callback=c'
+store = randomString(3);
+action = 'http://localhost:3226/' + store
+key = randomString(10)
+iframe = document.createElement('iframe');
+iframe.style.visibility = 'hidden'
+iframe.src = 'data:text/html,<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></scr'+'ipt><scr'+'ipt>with(document)with(firstChild)s=createElement("script"),s.src="' + url + '",s.onerror=window.c=function(a){f=createElement("form");with(f){action="'+action+'";method="POST";i=createElement("input");with(i)name="data",value=CryptoJS.AES.encrypt(JSON.stringify(a),"'+key+'");insertBefore(i,firstChild)}insertBefore(f,firstChild);f.submit()},insertBefore(s,firstChild)</scr'+'ipt>';
+document.firstChild.insertBefore(iframe, document.firstChild.firstChild);
+poll = function() {
+	var callbackId = randomString(3);
+	window[callbackId] = function(data) {
+		delete window[callbackId];
+		document.firstChild.removeChild(script);
+		document.firstChild.removeChild(iframe);
+		document.body.innerHTML = '<pre>' + JSON.stringify(JSON.parse(CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8)),0,2)
+	}
+	var script = document.createElement('script');
+	script.onerror = function() {
+		delete window[callbackId];
+		document.firstChild.removeChild(script);
+		setTimeout(poll, 200);
+	}
+	script.src = action + '?' + callbackId;
+	document.firstChild.insertBefore(script, document.firstChild.firstChild);
+}
+setTimeout(poll, 800);
+</script>

